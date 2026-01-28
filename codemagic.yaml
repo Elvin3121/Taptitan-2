@@ -1,40 +1,22 @@
-workflows:
-  android-workflow:
-    name: Android Build Workflow
-    max_build_duration: 60
-    environment:
-      flutter: stable
-    scripts:
-      - name: Clean and Get Packages
-        script: | 
-          flutter clean
-          flutter pub get
-      - name: Fix Permissions and Build APK
-        script: |
-          # 1. Find the android folder (wherever it is) and give permissions
-          find . -name "gradlew" -exec chmod +x {} +
-          
-          # 2. Build using the standard Flutter command (more reliable than manual Gradle)
-          flutter build apk --release --no-codesign
-    artifacts:
-      - build/app/outputs/flutter-apk/*.apk
-    publishing:
-      email:
-        recipients:
-          - your-email@example.com
-          
-build_script: | 
-  # --- KEEPING YOUR WORKING SDK SETUP ---
-  # (The SDK logic from the previous step remains untouched here)
-  
-  # --- FIX FOR CLEAN AND GET PACKAGES ---
-  flutter clean
-  rm -f pubspec.lock
-  flutter pub get
-  
-  # Optional: Ensure any generated code is handled
-  # flutter pub run build_runner build --delete-conflicting-outputs
-  
-  # --- PROCEED TO BUILD ---
-  flutter build apk --release
-  
+scripts:
+  - name: Clean and Get Packages
+    script: |
+      # --- KEEPING YOUR SDKs EXACTLY THE SAME ---
+      # (Existing SDK code stays above this)
+
+      # --- THE BYPASS FIX ---
+      # This finds your project folder automatically so 'clean' doesn't fail
+      PROJECT_ROOT=$(find . -name "pubspec.yaml" -exec dirname {} \;)
+      cd $PROJECT_ROOT
+      
+      echo "Currently in: $(pwd)"
+      
+      flutter clean
+      flutter pub get
+
+  - name: Build APK
+    script: |
+      PROJECT_ROOT=$(find . -name "pubspec.yaml" -exec dirname {} \;)
+      cd $PROJECT_ROOT
+      flutter build apk --release
+      
