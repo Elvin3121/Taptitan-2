@@ -1,33 +1,27 @@
 workflows:
-  flutter-app:
-    name: Build Taptitan Game
+  react-native-build:
+    name: Build Taptitan
     instance_type: mac_mini_m1
     max_build_duration: 60
     environment:
-      flutter: stable
-      # --- YOUR SDKs STAY ABOVE OR HERE ---
-      # (Don't change your existing SDK/Environment blocks)
-
+      # Set up environment for React Native, e.g., Node and relevant SDKs
+      node: latest
+      # Add other environment variables as needed
+    
     scripts:
-      - name: Clean and Get Packages (Auto-Locate Fix)
+      - name: Install Dependencies
         script: |
-          # This command finds your project folder even if it's nested
-          PROJECT_PATH=$(find . -name "pubspec.yaml" -print -quit | xargs dirname)
-          cd "$PROJECT_PATH"
+          # Navigate to the project directory if necessary, then install
+          # Example: cd path/to/your/react-native/project
+          npm install
           
-          echo "Found project at: $(pwd)"
-          
-          # Now it runs your commands inside the right folder
-          flutter clean
-          flutter pub get
-
-      - name: Build APK (Auto-Locate Fix)
+      - name: Build Android
         script: |
-          PROJECT_PATH=$(find . -name "pubspec.yaml" -print -quit | xargs dirname)
-          cd "$PROJECT_PATH"
-          
-          flutter build apk --release
+          # Commands to build for Android, often using grado
+          # Example: cd android && ./gradlew assembleRelease
+          # You may need to adjust these commands based on your project setup
+          echo "Build commands here"
           
     artifacts:
-      - build/**/outputs/**/*.apk
+      - build/**/*.apk
       
