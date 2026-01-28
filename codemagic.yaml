@@ -1,25 +1,28 @@
 workflows:
-  react-native-build:
-    name: Build Taptitan
-    instance_type: mac_mini_m1
+  android-template-build:
+    name: Android Template Build
     max_build_duration: 60
+    instance_type: mac_mini_m1
+    # This points CodeMagic to the right starting line
+    working_directory: template/android 
     environment:
-      # Set up environment for React Native, e.g., Node and relevant SDKs
-      node: latest
-      # Add other environment variables as needed
-    
+      groups:
+        - keystore_credentials # Ensure these match your CodeMagic UI settings
+      vars:
+        PACKAGE_NAME: "com.your.package"
     scripts:
-      - name: Install Dependencies
-        script: |
-          # Navigate to the project directory if necessary, then install
-          # Example: cd path/to/your/react-native/project
-          npm install
+      - name: Install dependencies
+        script: | 
+          ./gradlew dependencies
+      - name: Build Android APK
+        script: | 
+          # We are already inside template/android, so we run gradlew directly
+          ./gradlew assembleRelease
+    artifacts:
+      # We look inside the current working directory for the output
+      - app/build/outputs/apk/**/*.apk
+    publishing:
+      email:
+        recipients:
+          - your-elvinezimov1996@gmail.com
           
-      - name: Build Android
-        script: |
-          # Commands to build for Android, often using grado
-          # Example: cd android && ./gradlew assembleRelease
-          # You may need to adjust these commands based on your project setup
-          echo "Build commands here"
-
-    artifacts: - build/**/*.apk
