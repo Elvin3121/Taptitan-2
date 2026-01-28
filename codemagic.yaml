@@ -12,7 +12,7 @@ workflows:
           npm install --force
       - name: Build Android APK
         script: | 
-          cd android && ./gradlew assembleDebug
+          cd android && ./gradlew assembleRelease
     artifacts:
       - android/app/build/outputs/apk/**/*.apk
     publishing:
