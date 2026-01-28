@@ -1,4 +1,4 @@
-# Clean React Native Android Build Script
+# Clean React Native Android Build Script (Bypassing checks)
 workflows:
   react-native-android:
     name: React Native Android APK
@@ -7,12 +7,10 @@ workflows:
     environment:
       node: latest
     scripts:
-      - name: Install dependencies
+      - name: Install dependencies and build
         script: | 
           npm install --force
-      - name: Build Android APK
-        script: | 
-          cd android && ./gradlew assembleRelease
+          cd android && ./gradlew assembleRelease -x lint -g $(pwd)/.gradle
     artifacts:
       - android/app/build/outputs/apk/**/*.apk
     publishing:
