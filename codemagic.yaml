@@ -4,22 +4,18 @@ workflows:
     max_build_duration: 60
     environment:
       flutter: stable
-      xcode: latest # Only if you're using a Mac instance
     scripts:
-      - name: Set up local.properties
+      - name: Clean and Get Packages
         script: | 
-          echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
-      - name: Get Flutter dependencies
-        script: | 
-          flutter packages pub get
-      - name: Fix Gradle permissions
-        script: | 
-          # This fixes the common 'permission denied' error for gradlew
-          chmod +x android/gradlew
-      - name: Build Android APK
-        script: | 
-          # Using the wrapper directly ensures consistency
-          cd android && ./gradlew assembleRelease
+          flutter clean
+          flutter pub get
+      - name: Fix Permissions and Build APK
+        script: |
+          # 1. Find the android folder (wherever it is) and give permissions
+          find . -name "gradlew" -exec chmod +x {} +
+          
+          # 2. Build using the standard Flutter command (more reliable than manual Gradle)
+          flutter build apk --release --no-codesign
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
     publishing:
