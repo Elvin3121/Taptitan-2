@@ -21,7 +21,5 @@ workflows:
           # Example: cd android && ./gradlew assembleRelease
           # You may need to adjust these commands based on your project setup
           echo "Build commands here"
-          
-    artifacts:
-      - build/**/*.apk
-      
+
+    artifacts: - build/**/*.apk
