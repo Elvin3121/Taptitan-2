@@ -23,3 +23,18 @@ workflows:
         recipients:
           - your-email@example.com
           
+build_script: | 
+  # --- KEEPING YOUR WORKING SDK SETUP ---
+  # (The SDK logic from the previous step remains untouched here)
+  
+  # --- FIX FOR CLEAN AND GET PACKAGES ---
+  flutter clean
+  rm -f pubspec.lock
+  flutter pub get
+  
+  # Optional: Ensure any generated code is handled
+  # flutter pub run build_runner build --delete-conflicting-outputs
+  
+  # --- PROCEED TO BUILD ---
+  flutter build apk --release
+  
