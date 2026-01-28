@@ -1,4 +1,4 @@
-# Clean React Native Android Build Script (Template Path)
+# Clean React Native Android Build Script (Verified Path)
 workflows:
   react-native-android:
     name: React Native Android APK
@@ -10,9 +10,17 @@ workflows:
       - name: Install dependencies and build
         script: | 
           npm install --force
-          cd template/android && ./gradlew assembleRelease -x lint -g $(pwd)/.gradle
+          if [ -d "template/android" ]; then
+            cd template/android
+          elif [ -d "android" ]; then
+            cd android
+          else
+            echo "Android directory not found!"
+            exit 1
+          fi
+          ./gradlew assembleRelease -x lint -g $(pwd)/.gradle
     artifacts:
-      - template/android/app/build/outputs/apk/**/*.apk
+      - '**/app/build/outputs/apk/**/*.apk'
     publishing:
       email:
         recipients:
