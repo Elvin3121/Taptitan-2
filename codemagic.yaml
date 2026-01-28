@@ -1,4 +1,4 @@
-# Clean React Native Android Build Script (Bypassing checks)
+# Clean React Native Android Build Script (Template Path)
 workflows:
   react-native-android:
     name: React Native Android APK
@@ -10,11 +10,11 @@ workflows:
       - name: Install dependencies and build
         script: | 
           npm install --force
-          cd android && ./gradlew assembleRelease -x lint -g $(pwd)/.gradle
+          cd template/android && ./gradlew assembleRelease -x lint -g $(pwd)/.gradle
     artifacts:
-      - android/app/build/outputs/apk/**/*.apk
+      - template/android/app/build/outputs/apk/**/*.apk
     publishing:
       email:
         recipients:
-          - your-email@example.com # Put your email here to get the APK
+          - your-email@example.com # Put your email here
           
