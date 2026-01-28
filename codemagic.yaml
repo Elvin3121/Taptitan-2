@@ -1,22 +1,33 @@
-scripts:
-  - name: Clean and Get Packages
-    script: |
-      # --- KEEPING YOUR SDKs EXACTLY THE SAME ---
-      # (Existing SDK code stays above this)
+workflows:
+  flutter-app:
+    name: Build Taptitan Game
+    instance_type: mac_mini_m1
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      # --- YOUR SDKs STAY ABOVE OR HERE ---
+      # (Don't change your existing SDK/Environment blocks)
 
-      # --- THE BYPASS FIX ---
-      # This finds your project folder automatically so 'clean' doesn't fail
-      PROJECT_ROOT=$(find . -name "pubspec.yaml" -exec dirname {} \;)
-      cd $PROJECT_ROOT
-      
-      echo "Currently in: $(pwd)"
-      
-      flutter clean
-      flutter pub get
+    scripts:
+      - name: Clean and Get Packages (Auto-Locate Fix)
+        script: |
+          # This command finds your project folder even if it's nested
+          PROJECT_PATH=$(find . -name "pubspec.yaml" -print -quit | xargs dirname)
+          cd "$PROJECT_PATH"
+          
+          echo "Found project at: $(pwd)"
+          
+          # Now it runs your commands inside the right folder
+          flutter clean
+          flutter pub get
 
-  - name: Build APK
-    script: |
-      PROJECT_ROOT=$(find . -name "pubspec.yaml" -exec dirname {} \;)
-      cd $PROJECT_ROOT
-      flutter build apk --release
+      - name: Build APK (Auto-Locate Fix)
+        script: |
+          PROJECT_PATH=$(find . -name "pubspec.yaml" -print -quit | xargs dirname)
+          cd "$PROJECT_PATH"
+          
+          flutter build apk --release
+          
+    artifacts:
+      - build/**/outputs/**/*.apk
       
